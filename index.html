@@ -21,6 +21,17 @@
     </header>
   
     <main class="container" style="padding-top:18px">
+      <div class="controls">
+        <input type="text" id="buscador" placeholder="Buscar por nombre...">
+        <select id="filtroCategoria">
+          <option value="">Todas las categorías</option>
+        </select>
+        <select id="ordenarPor">
+          <option value="nombre">Ordenar por nombre</option>
+          <option value="precio">Ordenar por precio</option>
+          <option value="fecha">Ordenar por fecha</option>
+        </select>
+      </div>
   
       <div id="catalog" class="grid"></div>
     </main>
