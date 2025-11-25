@@ -36,6 +36,9 @@
     </main>
   
   <script>
+    
+let products = [];
+
   function parseCSV(text){
     const [headerLine, ...lines] = text.trim().split("\n")
     const headers = headerLine.split(",")
@@ -75,11 +78,10 @@
       card.addEventListener("click", () => openOverlay(p));
       container.appendChild(card)
     })
-    cargarCategorias();
 
   }
   
-  loadCatalog()
+loadCatalog().then(() => cargarCategorias());
   </script>
   
     <!-- Overlay de producto -->
@@ -250,39 +252,35 @@ document.querySelector(".whatsapp-button").setAttribute("href", link);
   //  });
   //}
   
-  function cargarCategorias() {
-    // 1. Obtener categorías únicas desde products
-    const categorias = [...new Set(products.map(p => p.category).filter(Boolean))];
 
-    // 2. Crear el select dinámico
-    const selectCat = document.createElement("select");
-    selectCat.id = "filterCategory";
-    selectCat.className = "select";
-    selectCat.innerHTML = `<option value="all">Todas las categorías</option>` +
-      categorias.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+function cargarCategorias() {
+  const categorias = [...new Set(products.map(p => p.category).filter(Boolean))];
 
-    // 3. Insertar en el bloque de controles
-    const controls = document.querySelector(".controls");
-    controls.appendChild(selectCat);
+  const selectCat = document.createElement("select");
+  selectCat.id = "filterCategory";
+  selectCat.className = "select";
+  selectCat.innerHTML = `<option value="all">Todas las categorías</option>` +
+    categorias.map(cat => `<option value="${cat}">${cat}</option>`).join('');
 
-    // 4. Agregar evento para filtrar
-    selectCat.addEventListener("change", () => {
-      const selected = selectCat.value;
-      let filtered = products;
+  const controls = document.querySelector(".controls");
+  controls.appendChild(selectCat);
 
-      if (selected !== "all") {
-        filtered = products.filter(p => p.category === selected);
-      }
+  selectCat.addEventListener("change", () => {
+    const selected = selectCat.value;
+    let filtered = products;
 
-      // Aplicar búsqueda actual
-      const term = document.getElementById("search").value.toLowerCase();
-      if (term) {
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
-      }
+    if (selected !== "all") {
+      filtered = products.filter(p => p.category === selected);
+    }
 
-      renderCatalog(filtered);
-    });
-  }
+    const term = document.getElementById("search").value.toLowerCase();
+    if (term) {
+      filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
+    }
+
+    renderCatalog(filtered);
+  });
+}
 
 
 </script>
