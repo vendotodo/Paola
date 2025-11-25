@@ -68,7 +68,7 @@
           <div class="title">${p.name}</div>
           <div style="font-size:13px; color:var(--muted)">${p.category}</div>
           <div style="font-size:13px; color:#444">${p.description}</div>
-          <div class="price">${displayPrice}</div>
+          <div class="price">Precio: ${displayPrice}</div>
         </div>`
       card.addEventListener("click", () => openOverlay(p));
       container.appendChild(card)
@@ -177,7 +177,12 @@ async function openOverlay(product) {
   const token = ++overlayLoadToken;
   document.getElementById('overlayName').textContent = product.name || '';
   document.getElementById('overlayDescription').textContent = product.description || '';
-  document.getElementById('overlayPrice').textContent = product.price ? ('Precio: $' + product.price) : 'Consultar';
+  
+  const overlayPrice = (product.price && !isNaN(product.price))
+    ? `Precio: $${product.price}`
+    : 'Consultar';
+
+  document.getElementById('overlayPrice').textContent = overlayPrice;
   document.getElementById('productOverlay').style.display = 'flex';
   await loadProductImages(product.image, token);
 }
