@@ -112,8 +112,7 @@ let currentSlide = 0;
 let products = [];
 
 function parseCSV(text){
-  const [headerLine, ...lines] = text.trim().split("
-");
+  const [headerLine, ...lines] = text.trim().split("\n");
   const headers = headerLine.split(",");
   return lines.map(l => {
     const cols = l.split(",");
