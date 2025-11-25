@@ -23,9 +23,6 @@
     <main class="container" style="padding-top:18px">
       <div class="controls">
         <input type="text" id="buscador" placeholder="Buscar por nombre...">
-        <select id="filtroCategoria">
-          <option value="">Todas las categorías</option>
-        </select>
         <select id="ordenarPor">
           <option value="nombre">Ordenar por nombre</option>
           <option value="precio">Ordenar por precio</option>
@@ -270,7 +267,9 @@ function cargarCategorias() {
       filtered = products.filter(p => p.category === selected);
     }
 
-    const term = document.getElementById("search").value.toLowerCase();
+    const searchInput = document.getElementById("search");
+    const term = searchInput ? searchInput.value.toLowerCase() : "";
+
     if (term) {
       filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
     }
