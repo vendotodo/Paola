@@ -1,140 +1,174 @@
+
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Vendo Todo - Javi Belloni</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  </head>
-  <body>
-    <header class="header">
-      <div class="container">
-        <div class="brand">
-          <div class="logo">JB</div>
-          <div>
-            <div class="site-title">Vendo Todo</div>
-            <div style="color:var(--muted); font-size:13px">Si te interesa algo, me mandas mensaje</div>
-          </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Catálogo de productos - Vendo Todo por Javi Belloni">
+  <title>Vendo Todo - Javi Belloni</title>
+  <link rel="stylesheet" href="static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Encabezado principal -->
+  <header class="header">
+    <div class="container">
+      <div class="brand">
+        <div class="logo">JB</div>
+        <div>
+          <div class="site-title">Vendo Todo</div>
+          <div style="color:var(--muted); font-size:13px">Si te interesa algo, me mandas mensaje</div>
         </div>
       </div>
-    </header>
-  
-    <main class="container" style="padding-top:18px">
-      <div class="controls">
-        <input id="search" class="search" placeholder="Buscar por nombre..." style="flex:1" />
-        <select id="sort" class="select">
-          <option value="none">Ordenar por</option>
-          <option value="price_asc">Precio ↑</option>
-          <option value="price_desc">Precio ↓</option>
-          <option value="name_asc">Nombre A→Z</option>
-          <option value="name_desc">Nombre Z→A</option>
-        </select>
+   >
 
-      </div>
-  
-      <div id="catalog" class="grid"></div>
-    </main>
-    
-    <!-- Overlay de producto -->
-    <div id="productOverlay" class="overlay">
-      <div class="overlay-content">
-        <span class="close-btn" onclick="closeOverlay()">&times;</span>
-        
-        <!-- Carrusel -->
-        <div class="carousel">
-          <button class="prev-btn" onclick="changeSlide(-1)">&#10094;</button>
-          <div class="carousel-images" id="carouselImages"></div>
-          <button class="next-btn" onclick="changeSlide(1)">&#10095;</button>
-        </div>
-    
-        <h2 id="overlayName"></h2>
-        <p id="overlayDescription"></p>
-        <p id="overlaySize"></p>
-        <p id="overlayPrice"></p>
-      </div>
+  <!-- Controles de búsqueda y ordenamiento -->
+  <main class="container" style="padding-top:18px">
+    <div class="controls">
+      <input id="search" class="search" placeholder="Buscar por nombre..." style="flex:1" aria-label="Buscar producto por nombre" />
+      <select id="sort" class="select" aria-label="Ordenar productos">
+        <option value="none">Ordenar por</option>
+        <option value="price_asc">Precio ↑</option>
+        <option value="price_desc">Precio ↓</option>
+        <option value="name_asc">Nombre A→Z</option>
+        <option value="name_desc">Nombre Z→A</option>
+      </select>
     </div>
-    <a href="#" class="whatsapp-button" target="_blank">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-  </body>
-  <script>
+
+    <!-- Catálogo dinámico -->
+    <div id="catalog" class="grid"></div>
+    <p id="emptyMessage" style="display:none; text-align:center; color:#666">No se encontraron productos</p>
+  </main>
+
+  <!-- Overlay con carrusel -->
+  <div id="productOverlay" class="overlay" role="dialog" aria-modal="true">
+    <div class="overlay-content">
+      <button class="close-btn" onclick="closeOverlay()" aria-label="Cerrar">&times;</button>
+      <div class="carousel">
+        <button id="prevBtn" class="prev-btn" onclick="changeSlide(-1)" aria-label="Imagen anterior">&#10094;</button>
+        <div class="carousel-images" id="carouselImages"></div>
+        <button id="nextBtn" class="next-btn" onclick="changeSlide(1)" aria-label="Imagen siguiente">&#10095;</button>
+      </div>
+      <h2 id="overlayName"></h2>
+      <p id="overlayDescription"></p>
+      <p id="overlaySize"></p>
+      <p id="overlayPrice"></p>
+    </div>
+  </div>
+
+  <!-- Botón WhatsApp -->
+  <a href="#" class="whatsapp-button" target="_blank" >
+
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+<script>
 let products = [];
-
-  function parseCSV(text){
-    const [headerLine, ...lines] = text.trim().split("\n")
-    const headers = headerLine.split(",")
-    return lines.map(l=>{
-      const cols = l.split(",")
-      let obj = {}
-      headers.forEach((h,i)=> obj[h.trim()] = cols[i]?.trim() )
-      obj.price = obj.price ? parseFloat(obj.price) : null;
-      return obj
-    })
-  }
-  
-  async function loadCatalog(){
-    const res = await fetch("data/products.csv");
-    const text = await res.text();
-    products = parseCSV(text);
-
-    
-    renderCatalog(products); // Reutilizamos esta función
-    cargarCategorias();      // Generamos el filtro dinámico
-  }
-
-  function renderCatalog(list) {  
-    const container = document.getElementById("catalog")
-    container.innerHTML = ""
-  
-    list.forEach(p=>{
-      const card = document.createElement("article")
-      card.className = "card"
-      card.dataset.name = p.name
-      card.dataset.price = p.price
-      const displayPrice = p.price !== null ? `$${p.price.toFixed(2)}` : "Consultar";
-
-      card.innerHTML = `
-        <img src="static/images/${p.id}.jpeg" alt="${p.name}" onerror="this.src='static/images/sinImagen.jpeg'">
-        <div class="meta">
-          <div class="title">${p.name}</div>
-          <div style="font-size:13px; color:var(--muted)">${p.category}</div>
-          <div style="font-size:13px; color:#444">${p.description}</div>
-          <div style="font-size:13px; color:#444">Dimenciones: ${p.size}</div>
-          <div class="price">Precio: ${displayPrice}</div>
-        </div>`
-      card.addEventListener("click", () => openOverlay(p));
-      container.appendChild(card)
-    })
-
-  }
-  
-loadCatalog();
-
 let overlayLoadToken = 0;
 let currentSlide = 0;
 
+// Convierte CSV en array de objetos
+function parseCSV(text) {
+  const [headerLine, ...lines] = text.trim().split("\n");
+  const headers = headerLine.split(",");
+  return lines.map(l => {
+    const cols = l.split(",");
+    let obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = cols[i]?.trim());
+    obj.price = obj.price ? parseFloat(obj.price) : null;
+    return obj;
+  });
+}
+
+// Carga catálogo desde CSV
+async function loadCatalog() {
+  const res = await fetch("data/products.csv");
+  const text = await res.text();
+  products = parseCSV(text);
+  renderCatalog(products);
+  cargarCategorias();
+}
+
+// Renderiza el catálogo
+function renderCatalog(list) {
+  const container = document.getElementById("catalog");
+  const emptyMsg = document.getElementById("emptyMessage");
+  container.innerHTML = "";
+
+  if (list.length === 0) {
+    emptyMsg.style.display = "block";
+    return;
+  } else {
+    emptyMsg.style.display = "none";
+  }
+
+  list.forEach(p => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.name = p.name;
+    card.dataset.price = p.price;
+    const displayPrice = p.price !== null ? `$${p.price.toFixed(2)}` : "Consultar";
+
+    // Construcción segura del contenido
+    const img = document.createElement("img");
+    img.src = `static/images/${p.id}.jpeg`;
+    img.alt = `${p.name} - ${p.category}`;
+    img.loading = "lazy";
+    img.onerror = () => img.src = 'static/images/sinImagen.jpeg';
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+
+    meta.innerHTML = `
+      <div class="title">${p.name}</div>
+      <div style="font-size:13px; color:var(--muted)">${p.category}</div>
+      <div style="font-size:13px; color:#444">${p.description}</div>
+      <div style="font-size:13px; color:#444">Dimensiones: ${p.size}</div>
+      <div class="price">Precio: ${displayPrice}</div>
+    `;
+
+    card.appendChild(img);
+    card.appendChild(meta);
+    card.addEventListener("click", () => openOverlay(p));
+    container.appendChild(card);
+  });
+}
+
+loadCatalog();
+
+// Carrusel: cambia imagen activa
+function changeSlide(step) {
+  const imgs = document.querySelectorAll('#carouselImages img');
+  if (!imgs.length) return;
+  imgs[currentSlide].classList.remove('active');
+  currentSlide = (currentSlide + step + imgs.length) % imgs.length;
+  imgs[currentSlide].classList.add('active');
+}
+
+// Verifica existencia de imagen
 async function checkImageExists(url) {
   try {
     const res = await fetch(url, { method: 'HEAD' });
     return res.ok;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
+// Resuelve ruta de imagen
 function resolveImagePath(file) {
   if (!file) return file;
   if (file.startsWith('http') || file.startsWith('/') || file.includes('/')) return file;
   return 'static/images/' + file;
 }
 
+// Carga imágenes del producto en carrusel
 async function loadProductImages(baseImage, token) {
   const container = document.getElementById('carouselImages');
   container.innerHTML = '<div class="loading">Cargando imágenes...</div>';
   if (!baseImage) { container.innerHTML = '<div class="empty">Sin imagen</div>'; return; }
 
-  const m = baseImage.match(/^(.*?)(-\d+)?(\.[^.]+)$/);
+  const m = baseImage.match(/^(.*?)(-\\d+)?(\\.[^.]+)$/);
   if (!m) { container.innerHTML = '<div class="empty">Formato inválido</div>'; return; }
   const baseName = m[1];
   const ext = m[3];
@@ -142,32 +176,18 @@ async function loadProductImages(baseImage, token) {
   const imagesFound = [];
   const basePath = resolveImagePath(baseImage);
   if (token !== overlayLoadToken) return;
-  if (await checkImageExists(basePath)) {
-    imagesFound.push(basePath);
-  } else {
-    const alt = resolveImagePath(baseName + '-1' + ext);
-    if (token !== overlayLoadToken) return;
-    if (await checkImageExists(alt)) imagesFound.push(alt);
-  }
+  if (await checkImageExists(basePath)) imagesFound.push(basePath);
 
   const maxExtra = 15;
   for (let i = 1; i <= maxExtra; i++) {
     if (token !== overlayLoadToken) return;
     const candidate = resolveImagePath(baseName + '-' + i + ext);
-    try {
-      const exists = await checkImageExists(candidate);
-      if (exists) {
-        if (!imagesFound.includes(candidate)) imagesFound.push(candidate);
-      } else {
-        break; // paramos en el primer no-encontrado
-      }
-    } catch (e) {
-      break;
-    }
+    if (await checkImageExists(candidate)) imagesFound.push(candidate);
+    else break;
   }
 
   container.innerHTML = '';
-  if (imagesFound.length === 0) {
+  if (!imagesFound.length) {
     container.innerHTML = '<div class="empty">No hay imágenes</div>';
     return;
   }
@@ -180,189 +200,77 @@ async function loadProductImages(baseImage, token) {
   });
 
   currentSlide = 0;
-
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-
-  if (prevBtn) prevBtn.style.display = imagesFound.length > 1 ? 'block' : 'none';
-  if (nextBtn) nextBtn.style.display = imagesFound.length > 1 ? 'block' : 'none';
-
+  document.getElementById('prevBtn').style.display = imagesFound.length > 1 ? 'block' : 'none';
+  document.getElementById('nextBtn').style.display = imagesFound.length > 1 ? 'block' : 'none';
 }
 
+// Abre overlay con datos del producto
 async function openOverlay(product) {
   const token = ++overlayLoadToken;
   document.getElementById('overlayName').textContent = product.name || '';
   document.getElementById('overlayDescription').textContent = product.description || '';
-  document.getElementById('overlaySize').textContent = 'Dimenciones: ' + product.size || '';
-  
-  const overlayPrice = (product.price && !isNaN(product.price))
-    ? `$${product.price}`
-    : 'Consultar';
-
+  document.getElementById('overlaySize').textContent = 'Dimensiones: ' + (product.size || '');
+  const overlayPrice = (product.price && !isNaN(product.price)) ? `$${product.price}` : 'Consultar';
   document.getElementById('overlayPrice').textContent = 'Precio: ' + overlayPrice;
   document.getElementById('productOverlay').style.display = 'flex';
   await loadProductImages(product.image, token);
 }
 
+// Cierra overlay
 function closeOverlay() {
-  overlayLoadToken++; // invalida cargas pendientes
+  overlayLoadToken++;
   document.getElementById('productOverlay').style.display = 'none';
   document.getElementById('carouselImages').innerHTML = '';
 }
 
-function changeSlide(step) {
-  const imgs = document.querySelectorAll('#carouselImages img');
-  if (!imgs || imgs.length === 0) return;
-  imgs[currentSlide].classList.remove('active');
-  currentSlide = (currentSlide + step + imgs.length) % imgs.length;
-  imgs[currentSlide].classList.add('active');
-}
-
-// Delegación: clic en la tarjeta abre el overlay
-document.addEventListener('click', function(ev) {
-  const card = ev.target.closest && ev.target.closest('.card');
-  if (card && document.getElementById('catalog') && document.getElementById('catalog').contains(card)) {
-    const imgEl = card.querySelector('img');
-    const imageSrc = imgEl ? imgEl.getAttribute('src') : (card.dataset.image || '');
-    const name = card.dataset.name || (card.querySelector('.title') && card.querySelector('.title').textContent.trim()) || '';
-    const descNode = card.querySelector('.meta > div:nth-child(3)');
-    const description = descNode ? descNode.textContent.trim() : (card.dataset.description || '');
-    const descSize = card.querySelector('.meta > div:nth-child(4)');
-    const size = descSize ? descSize.textContent.trim() : (card.dataset.size || '');
-    const price = card.dataset.price || (card.querySelector('.price') && card.querySelector('.price').textContent.replace('$','').trim()) || '';
-    openOverlay({ image: imageSrc, name: name, description: description, size: size, price: price });
-    return;
-  }
-
-  if (ev.target && ev.target.id === 'prevBtn') { ev.preventDefault(); changeSlide(-1); return; }
-  if (ev.target && ev.target.id === 'nextBtn') { ev.preventDefault(); changeSlide(1); return; }
-  if (ev.target && ev.target.id === 'overlayClose') { closeOverlay(); return; }
-  if (ev.target && ev.target.id === 'productOverlay') { closeOverlay(); return; }
-});
-
-const phone = "5491165031891"; // Número de WhatsApp
+// WhatsApp link dinámico
+const phone = "5491165031891";
 const message = "Hola, quiero más información.";
-const link = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-document.querySelector(".whatsapp-button").setAttribute("href", link);
-    
-  // Función para obtener las categorías únicas y llenar el filtro
-  //function cargarCategorias() {
-  //  const categorias = [...new Set(articulos.map(a => a.categoria))];
-  //  categorias.forEach(cat => {
-  //    const option = document.createElement("option");
-  //    option.value = cat;
-  //    option.textContent = cat;
-  //    filtroCategoria.appendChild(option);
-  //  });
-  //}
-  
+document.querySelector(".whatsapp-button").setAttribute("href", `https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
 
+// Filtro por categoría y búsqueda
 function cargarCategorias() {
   const categorias = [...new Set(products.map(p => p.category).filter(Boolean))];
-
   const selectCat = document.createElement("select");
   selectCat.id = "filterCategory";
   selectCat.className = "select";
   selectCat.innerHTML = `<option value="all">Todas las categorías</option>` +
     categorias.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+  document.querySelector(".controls").appendChild(selectCat);
 
-  const controls = document.querySelector(".controls");
-  controls.appendChild(selectCat);
+  selectCat.addEventListener("change", applyFilters);
+  document.getElementById("sort").addEventListener("change", applyFilters);
+  document.getElementById("search").addEventListener("input", debounce(applyFilters, 300));
+}
 
-  selectCat.addEventListener("change", () => {
-    const selected = selectCat.value;
-    let filtered = products;
+// Aplica filtros y ordenamiento
+function applyFilters() {
+  let filtered = [...products];
+  const term = document.getElementById("search").value.toLowerCase();
+  const selectedCategory = document.getElementById("filterCategory")?.value || "all";
+  const sortValue = document.getElementById("sort").value;
 
-    if (selected !== "all") {
-      filtered = products.filter(p => p.category === selected);
-    }
+  if (selectedCategory !== "all") filtered = filtered.filter(p => p.category === selectedCategory);
+  if (term) filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
 
-    const searchInput = document.getElementById("search");
-    const term = searchInput ? searchInput.value.toLowerCase() : "";
-
-    if (term) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
-    }
-
-    renderCatalog(filtered);
-  });
-  
-const sortSelect = document.getElementById("sort");
-
-sortSelect.addEventListener("change", () => {
-  let sorted = [...products];
-
-  switch (sortSelect.value) {
-    case "price_asc":
-      sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
-      break;
-    case "price_desc":
-      sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
-      break;
-    case "name_asc":
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-      break;
-    case "name_desc":
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
-      break;
-  }
-
-  // Aplicar filtro por categoría y búsqueda actual
-  const categorySelect = document.getElementById("filterCategory");
-  const selectedCategory = categorySelect ? categorySelect.value : "all";
-  if (selectedCategory !== "all") {
-    sorted = sorted.filter(p => p.category === selectedCategory);
-  }
-
-  const searchInput = document.getElementById("search");
-  const term = searchInput ? searchInput.value.toLowerCase() : "";
-  if (term) {
-    sorted = sorted.filter(p => p.name.toLowerCase().includes(term));
-  }
-
-  renderCatalog(sorted);
-});
-
-const searchInput = document.getElementById("search");
-
-searchInput.addEventListener("input", () => {
-  const term = searchInput.value.toLowerCase();
-
-  // Filtrar por nombre
-  let filtered = products.filter(p => p.name.toLowerCase().includes(term));
-
-  // Mantener filtro por categoría activo
-  const categorySelect = document.getElementById("filterCategory");
-  const selectedCategory = categorySelect ? categorySelect.value : "all";
-  if (selectedCategory !== "all") {
-    filtered = filtered.filter(p => p.category === selectedCategory);
-  }
-
-  // Mantener ordenamiento activo
-  const sortSelect = document.getElementById("sort");
-  if (sortSelect && sortSelect.value !== "none") {
-    switch (sortSelect.value) {
-      case "price_asc":
-        filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
-        break;
-      case "price_desc":
-        filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
-        break;
-      case "name_asc":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "name_desc":
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-    }
+  switch (sortValue) {
+    case "price_asc": filtered.sort((a, b) => (a.price || 0) - (b.price || 0)); break;
+    case "price_desc": filtered.sort((a, b) => (b.price || 0) - (a.price || 0)); break;
+    case "name_asc": filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+    case "name_desc": filtered.sort((a, b) => b.name.localeCompare(a.name)); break;
   }
 
   renderCatalog(filtered);
-});
-
 }
 
-
+// Debounce para búsqueda
+function debounce(fn, delay) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
 </script>
-
+</body>
 </html>
