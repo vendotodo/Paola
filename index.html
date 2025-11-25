@@ -29,7 +29,6 @@
         <select id="ordenarPor">
           <option value="nombre">Ordenar por nombre</option>
           <option value="precio">Ordenar por precio</option>
-          <option value="fecha">Ordenar por fecha</option>
         </select>
       </div>
   
@@ -238,6 +237,53 @@ const message = "Hola, quiero más información.";
 const link = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 document.querySelector(".whatsapp-button").setAttribute("href", link);
     
+  // Función para obtener las categorías únicas y llenar el filtro
+  //function cargarCategorias() {
+  //  const categorias = [...new Set(articulos.map(a => a.categoria))];
+  //  categorias.forEach(cat => {
+  //    const option = document.createElement("option");
+  //    option.value = cat;
+  //    option.textContent = cat;
+  //    filtroCategoria.appendChild(option);
+  //  });
+  //}
+  
+  function cargarCategorias() {
+    // 1. Obtener categorías únicas desde products
+    const categorias = [...new Set(products.map(p => p.category).filter(Boolean))];
+
+    // 2. Crear el select dinámico
+    const selectCat = document.createElement("select");
+    selectCat.id = "filterCategory";
+    selectCat.className = "select";
+    selectCat.innerHTML = `<option value="all">Todas las categorías</option>` +
+      categorias.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+
+    // 3. Insertar en el bloque de controles
+    const controls = document.querySelector(".controls");
+    controls.appendChild(selectCat);
+
+    // 4. Agregar evento para filtrar
+    selectCat.addEventListener("change", () => {
+      const selected = selectCat.value;
+      let filtered = products;
+
+      if (selected !== "all") {
+        filtered = products.filter(p => p.category === selected);
+      }
+
+      // Aplicar búsqueda actual
+      const term = document.getElementById("search").value.toLowerCase();
+      if (term) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(term));
+      }
+
+      renderCatalog(filtered);
+    });
+  }
+
+  cargarCategorias();
+
 </script>
 
 </html>
