@@ -4,27 +4,31 @@ name: Actualizar fecha de despliegue
 on:
   push:
     branches:
-      - main  # Cambia si tu rama principal se llama diferente
+      - main
+
+permissions:
+  contents: write
 
 jobs:
   update-date:
     runs-on: ubuntu-latest
     steps:
-      # Paso 1: Descargar el código del repo
       - name: Checkout del repositorio
         uses: actions/checkout@v3
 
-      # Paso 2: Insertar la fecha actual en el HTML
       - name: Insertar fecha en index.html
         run: |
           FECHA=$(date +"%d/%m/%Y %H:%M")
           sed -i "s|<!--DEPLOY_DATE-->|$FECHA|g" index.html
 
-      # Paso 3: Configurar Git y hacer commit
+      - name: Configurar remoto con token
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
       - name: Commit y push de cambios
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add index.html
-          git commit -m "Actualización de fecha de despliegue"
+          git commit -m "Actualización de fecha de despliegue" || echo "No hay cambios"
           git push
