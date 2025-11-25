@@ -68,6 +68,13 @@ let products = [];
 let overlayLoadToken = 0;
 let currentSlide = 0;
 
+
+const formatter = new Intl.NumberFormat('es-AR', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+});
+
+
 // Convierte CSV en array de objetos
 function parseCSV(text) {
   const [headerLine, ...lines] = text.trim().split("\n");
@@ -108,7 +115,7 @@ function renderCatalog(list) {
     card.className = "card";
     card.dataset.name = p.name;
     card.dataset.price = p.price;
-    const displayPrice = p.price !== null ? `$${p.price.toFixed(2)}` : "Consultar";
+    const displayPrice = p.price !== null ? `$${formatter.format(p.price)}` : "Consultar";
 
     // Construcción segura del contenido
     const img = document.createElement("img");
@@ -212,7 +219,8 @@ async function openOverlay(product) {
   document.getElementById('overlayName').textContent = product.name || '';
   document.getElementById('overlayDescription').textContent = product.description || '';
   document.getElementById('overlaySize').textContent = 'Dimensiones: ' + (product.size || '');
-  const overlayPrice = (product.price && !isNaN(product.price)) ? `$${product.price}` : 'Consultar';
+  
+  const overlayPrice = (product.price && !isNaN(product.price)) ? `$${formatter.format(product.price)}` : 'Consultar';
   document.getElementById('overlayPrice').textContent = 'Precio: ' + overlayPrice;
   document.getElementById('productOverlay').style.display = 'flex';
   await loadProductImages(product.image || `${product.id}.jpeg`, token);
