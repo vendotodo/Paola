@@ -85,7 +85,7 @@ let products = [];
       const displayPrice = p.price !== null ? `$${p.price.toFixed(2)}` : "Consultar";
 
       card.innerHTML = `
-        <img src="static/images/${p.id}.jpeg" alt="${p.name}">
+        <img src="static/images/${p.id}.jpeg" alt="${p.name}" onerror="this.src='static/images/sinImagen.jpeg'">
         <div class="meta">
           <div class="title">${p.name}</div>
           <div style="font-size:13px; color:var(--muted)">${p.category}</div>
