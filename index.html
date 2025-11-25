@@ -179,10 +179,10 @@ async function openOverlay(product) {
   document.getElementById('overlayDescription').textContent = product.description || '';
   
   const overlayPrice = (product.price && !isNaN(product.price))
-    ? `Precio: $${product.price}`
+    ? `$${product.price}`
     : 'Consultar';
 
-  document.getElementById('overlayPrice').textContent = overlayPrice;
+  document.getElementById('overlayPrice').textContent = 'Precio: ' + overlayPrice;
   document.getElementById('productOverlay').style.display = 'flex';
   await loadProductImages(product.image, token);
 }
