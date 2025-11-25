@@ -162,8 +162,13 @@ async function loadProductImages(baseImage, token) {
   });
 
   currentSlide = 0;
-  document.getElementById('prevBtn').style.display = imagesFound.length > 1 ? 'block' : 'none';
-  document.getElementById('nextBtn').style.display = imagesFound.length > 1 ? 'block' : 'none';
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  if (prevBtn) prevBtn.style.display = imagesFound.length > 1 ? 'block' : 'none';
+  if (nextBtn) nextBtn.style.display = imagesFound.length > 1 ? 'block' : 'none';
+
 }
 
 async function openOverlay(product) {
