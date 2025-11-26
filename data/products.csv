@@ -8,7 +8,7 @@ id,name,category,description,price,image,size
 7,Mesa Ratona,Muebles,Mesita en madera en color marrón habano con algunos desgastes y marcas sobre la base (ideal volver a pintarla),,si,0.90 x 0.60
 8,Sillón 3 cuerpos + Camastro,Muebles,Sillon 3 cuerpos con 2 almohadones en respaldo en cuerina beige y en la base del asiento una unica placa en chenille marrón chocolate con funda con cierre con 4 patas madera oscura + Apoya pies: Base cuerina beige con asiento en una unica placa en tela chenille marrón chocolate con cierre.,,si,2.05 x 0.90 (Camastro: 1 x 0.60) 
 9,Mesa TV,Muebles,Mesita con ruedas en laqueado marrón habano con 2 cajones en el frente con correderas metalicas y herrajes en plateado. Además cuenta con 2 divisiones para (ej impresora o espacios de guardado),,,0.90 x 0.44
-10,Perchero pie,Decoracion ,Perchero metalico pantalonero con base circular en color plateado ,,si,1 x 0.46
+10,Perchero pie,Decoracion ,Perchero metalico pantalonero con base circular en color plateado ,50000,si,1 x 0.46
 11,Mesa de luz,Muebles,Mesa de luz en madera laqueado blanca con 3 cajones (2 pequeños y otro mas grande) ,,,0.50 x 0.40
 12,Comoda dormitorio,Muebles,Comoda con 4 cajones en madera laqueada blanca; cuentan con 2 cajones mas chicos y 2 cajones largos,,,0.90 x 0.50
 13,Biblioteca /Rack TV,Muebles,Mueble compuesto x 2 columnas que pueden usarse juntas o x separado con 3 estantes cada una.,,,1.84 x 0.54 ancho x 0.37 profundidad c/u
@@ -16,18 +16,18 @@ id,name,category,description,price,image,size
 15,Velador,Luminaria,Velador laqueado blanco con 3 caireles y pantalla en color bordo ,,,
 16,Respaldo cama Queen,Muebles,Respaldo en madera laqueada blanca que puede ser apoyado o amurado a la pared,,,1.25 x 1.76 ancho
 17,Cama plaza y media,Muebles,Cama con carrito de plaza y media en madera maciza en laqueado blanco mate,,,1.95 x 0.95
-18,Lampara juvenil techo,Luminaria,Lampara de techo con forma de pelota metalica en color celeste ,,si,
+18,Lampara juvenil techo,Luminaria,Lampara de techo con forma de pelota metalica en color celeste ,25000,si,
 19,Reposeras,Jardín ,2 reposeras plasticas blancas con 3 posiciones y cajon de guardado,,,1.87 x 0.76 x 0.47
-20,Perchero pared,Decoración,Perchero para colgar sobre pared en cuero marrón con 4 ganchos,,,0.53
-21,Cuadro,Decoracion ,Cuadro triptico de pared de arbol de la vida calado en marrón oscuro,,si,
+20,Perchero pared,Decoración,Perchero para colgar sobre pared en cuero marrón con 4 ganchos,25000,,0.53
+21,Cuadro,Decoracion ,Cuadro triptico de pared de arbol de la vida calado en marrón oscuro,25000,si,
 22,Espejo,Decoración,Espejo para recibidor o baño en laqueado color marrón habano,,,0.78 x 0.60
 23,Bacha con mesada,Construcción,Bacha lavadero con mesada de granito gris,,,0.40 x 0.35 x 0.20 (mesada: 0.71x 0.62)
 24,Masetas,Jardín ,Duo de masetas de cemento de diferentes tamaños,,,cubo 0.25 x 0.25 y alta 0.50 x 0.25
 25,Organizador/Mueble aux,Muebles,Mueble de pino con ruedas y estante en color turquesa patinado,,,1 x 0.30 x 0.88
-26,Cocina Horno,Electro,Cocina de 4 hornallas y horno a gas marca Domec en color blanco,,,
-27,Puerta exterior,Construcción,Puerta metalica en color gris con cerradura ,,,0.90 x 2.05
+26,Cocina Horno,Electro,Cocina de 4 hornallas y horno a gas marca Domec en color blanco,120000,,
+27,Puerta exterior,Construcción,Puerta metalica en color gris con cerradura ,150000,,0.90 x 2.05
 28,Parlantes Home Theater Philips,Electro,Juego de 5 parlantes + subwoofer ,40000,,
 29,Set de repisas + Cajonera,Muebles,Set de cubos y repisas con cajonera mobil de 3 cajones en melamina blanco y azul y ruedas,,,
-
-
+30,Juego Chrono Bomb,Juegos,Juego de mesa Chrono Bomb completo,50000,,
+31,Juego JUMANJI,Juegos,Juego de mesa JUMANJI completo,40000,,
 
