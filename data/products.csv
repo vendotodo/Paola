@@ -1,7 +1,7 @@
 id,name,category,description,price,image,size
 1,Mesa de Comedor con 4 Sillas,Muebles,Mesa comedor laqueda en color marron habano con sillas en mismo tono y asiento en cuerina natural,300000,,1.60 x 0.90
-2,Poltronas,Muebles,2 poltronas en tela rustica estampada en color beige con patas en madera oscura,100000,si,0.70 x 0.72
-3,Dresuar,Muebles,Dresuar de madera laqueada en color habano con 2 cajones al frente,60000,,0.80 x 0.40
+2,Poltronas,Muebles,2 poltronas en tela rustica estampada en color beige con patas en madera oscura,-1,si,0.70 x 0.72
+3,Dresuar,Muebles,Dresuar de madera laqueada en color habano con 2 cajones al frente,-1,,0.80 x 0.40
 4,Lampara mesa,Luminaria,Lampara de base metalica en color plateado con pie en cuero marron (sin pantalla),25000,,altura 0.47
 5,Lampara pie ,Luminaria,Lampara de base metalica en color plateado con pie en cuero marron con pantalla en color blanco,50000,,altura 1.46
 6,Revistero,Decoración,Revistero en cuero color marrón,15000,,0.26 x 0.28
