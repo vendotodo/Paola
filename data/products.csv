@@ -1,8 +1,7 @@
 id,name,category,description,price,image,size
-6,Revistero,Decoración,Revistero en cuero color marrón,15000,,0.26 x 0.28
-23,Bacha con mesada,Construcción,Bacha lavadero con mesada de granito gris,45000,,0.40 x 0.35 x 0.20 (mesada: 0.71x 0.62)
-24,Masetas,Jardín ,Duo de masetas de cemento de diferentes tamaños,20000,,cubo 0.25 x 0.25 y alta 0.50 x 0.25
-27,Puerta exterior,Construcción,Puerta metalica en color gris con cerradura ,70000,,0.90 x 2.05
-28,Parlantes Home Theater Philips,Electro,Juego de 5 parlantes + subwoofer ,50000,,
-30,Juego Chrono Bomb,Juegos,Juego de mesa Chrono Bomb completo,35000,,
+1,MESA,MUEBLES,MESA DE ALGARROBO,200000,,1.50 x 0.80
+2,COLCHON,MUEBLES,COLCHON DEESPUMA. UN AÑO DE USO,200000,,1.60 x 2.00
+3,MODULAR,MUEBLES	MODULAR DE ALAMO,300000,,1.90 x 1.85
+4,APARADOR,MUEBLES,APARADOR DE ALAMO,180000,,2.00 x 1.60
+5,CAMAS,MUEBLES,CAMAS LAQUEADAS EN L,200000,,2.10 x 0.94
 
